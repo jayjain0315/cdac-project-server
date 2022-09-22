@@ -6,6 +6,5 @@ router.get('/', Election.getElections);
 router.get("/district/:district", Election.getElectionsByVoterDistrict);
 router.post('/', Election.create);
 router.patch('/', Election.update);
-// router.delete('/', Election.delete);
 
 module.exports = router;
