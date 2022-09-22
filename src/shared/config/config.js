@@ -1,5 +1,4 @@
 var config = module.exports;
-var PRODUCTION = process.env.NODE_ENV === "production";
 
 config.express = {
 	port: process.env.PORT || "3000",
@@ -7,7 +6,7 @@ config.express = {
 };
 
 config.key = {
-	privateKey: "anythingCanBeUsedHere",
+	privateKey: "cdac-pkey",
 	tokenExpiry: "1h", // 1 hour
 };
 
