@@ -80,38 +80,67 @@ exports.createIfNotExists = function (req, res) {
 };
 
 exports.login = function (req, res) {
-  User.findByEmail(req.body.email)
-    .then(function (user) {
-      console.log(JSON.stringify(user));
-      if (user === null) {
-        res
-          .status(422)
-          .json({ statusCode: 422, message: "Email not recognised" });
-      } else {
-        console.log(req.body.password);
-        console.log(UserService.decrypt(user.password));
-        if (req.body.password === UserService.decrypt(user.password)) {
-          res.status(200).json(generateUserJson(user));
-
-          // update last login here
-          updateLoginTime(user._id);
+  if (req.body.email) {
+    User.findByEmail(req.body.email)
+      .then(function (user) {
+        if (user === null) {
+          res
+            .status(422)
+            .json({ statusCode: 422, message: "Email not recognised" });
         } else {
-          var errorResponse = {
-            statusCode: 500,
-            message: "Oh uh, something went wrong",
-          };
-          res.status(errorResponse.statusCode).json(errorResponse);
+          if (req.body.password === UserService.decrypt(user.password)) {
+            res.status(200).json(generateUserJson(user));
+
+            // update last login here
+            updateLoginTime(user._id);
+          } else {
+            var errorResponse = {
+              statusCode: 500,
+              message: "Oh uh, something went wrong",
+            };
+            res.status(errorResponse.statusCode).json(errorResponse);
+          }
         }
-      }
-    })
-    .catch(function (err) {
-      console.error(err);
-      var errorResponse = {
-        statusCode: 500,
-        message: "Oh uh, something went wrong",
-      };
-      res.status(errorResponse.statusCode).json(errorResponse);
-    });
+      })
+      .catch(function (err) {
+        console.error(err);
+        var errorResponse = {
+          statusCode: 500,
+          message: "Oh uh, something went wrong",
+        };
+        res.status(errorResponse.statusCode).json(errorResponse);
+      });
+  } else if (req.body.voterId) {
+    User.findByVoterId(req.body.voterId)
+      .then(function (user) {
+        if (user === null) {
+          res
+            .status(422)
+            .json({ statusCode: 422, message: "VoterId not recognised" });
+        } else {
+          if (req.body.password === UserService.decrypt(user.password)) {
+            res.status(200).json(generateUserJson(user));
+
+            // update last login here
+            updateLoginTime(user._id);
+          } else {
+            var errorResponse = {
+              statusCode: 500,
+              message: "Oh uh, something went wrong",
+            };
+            res.status(errorResponse.statusCode).json(errorResponse);
+          }
+        }
+      })
+      .catch(function (err) {
+        console.error(err);
+        var errorResponse = {
+          statusCode: 500,
+          message: "Oh uh, something went wrong",
+        };
+        res.status(errorResponse.statusCode).json(errorResponse);
+      });
+  }
 };
 
 exports.update = function (req, res) {

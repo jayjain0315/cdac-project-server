@@ -56,6 +56,10 @@ var User = new Schema({
     type: String,
     default: "",
   },
+  aadharNumber: {
+    type: String,
+    default: "",
+  },
 });
 User.plugin(uniqueValidator);
 var userModel = mongoose.model("user", User);
@@ -108,6 +112,18 @@ exports.findById = function (id) {
 exports.findByEmail = function (email) {
   return userModel.findOne({
     email: email,
+  });
+};
+
+/**
+ * Find the user with given voterId
+ * @api
+ * @param {string} voterId
+ * @returns {Query<User, Error>} user
+ */
+exports.findByVoterId = function (voterId) {
+  return userModel.findOne({
+    voterId: voterId,
   });
 };
 
