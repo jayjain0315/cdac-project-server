@@ -2,6 +2,7 @@ const UserService = require("./user.service");
 const Config = require("../../shared/config/config");
 const Jwt = require("jsonwebtoken");
 const User = require("./user.model");
+const crypto = require("crypto");
 const privateKey = Config.key.privateKey;
 const expirytime = Config.key.tokenExpiry;
 
@@ -14,6 +15,8 @@ exports.create = function (req, res) {
   user.createdAt = new Date();
   user.modifiedAt = new Date();
   user.lastActiveAt = new Date();
+  let tempId = crypto.randomBytes(4).toString("hex");
+  user.voterId = tempId.toUpperCase();
   User.create(user)
     .then(function (user) {
       res.status(200).json(generateUserJson(user));
